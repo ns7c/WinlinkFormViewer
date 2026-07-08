@@ -1,2 +1,3 @@
-# WinlinkFormViewer
-Portable browser-based viewer for Winlink XML forms.
+# Winlink Portable Form Viewer
+
+Version 0.1.0-alpha1

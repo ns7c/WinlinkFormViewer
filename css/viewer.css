@@ -1,0 +1,90 @@
+body {
+
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #eceff3;
+    margin: 20px;
+
+}
+
+#app {
+
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border: 1px solid #c8c8c8;
+
+}
+
+.subtitle {
+
+    color: #666;
+    margin-bottom: 20px;
+
+}
+
+.group {
+
+    margin-bottom: 18px;
+
+}
+
+.group label {
+
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+
+}
+
+button {
+
+    width: 110px;
+
+}
+
+.group span {
+
+    margin-left: 12px;
+
+}
+
+#statusTable {
+
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 20px;
+
+}
+
+#statusTable td {
+
+    padding: 4px 16px 4px 0;
+
+}
+
+#statusTable td:first-child {
+
+    font-weight: bold;
+
+}
+
+#log {
+
+    height: 220px;
+    overflow-y: auto;
+    border: 1px solid #aaa;
+    background: #fafafa;
+    padding: 10px;
+    white-space: pre-wrap;
+
+}
+
+#statusBar {
+
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+    color: #444;
+
+}

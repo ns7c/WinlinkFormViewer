@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>Winlink Portable Form Viewer</title>
+
+    <link rel="stylesheet" href="css/viewer.css">
+
+</head>
+
+<body>
+
+<div id="app">
+
+    <h1>Winlink Portable Form Viewer</h1>
+
+    <div class="subtitle">
+        Offline viewer for Winlink XML forms
+    </div>
+
+    <div class="group">
+
+        <label>Forms Library</label>
+
+        <button id="btnForms">
+            Browse...
+        </button>
+
+        <span id="formsName">
+            No forms library selected
+        </span>
+
+        <input
+            type="file"
+            id="formsFile"
+            accept=".zip"
+            hidden>
+
+    </div>
+
+    <table id="statusTable">
+
+        <tr>
+            <td>Forms Version</td>
+            <td id="formsVersion">---</td>
+        </tr>
+
+        <tr>
+            <td>Viewer Forms</td>
+            <td id="viewerCount">0</td>
+        </tr>
+
+        <tr>
+            <td>Duplicate Names</td>
+            <td id="duplicateCount">0</td>
+        </tr>
+
+    </table>
+
+    <hr>
+
+    <div class="group">
+
+        <label>XML File</label>
+
+        <button
+            id="btnXML"
+            disabled>
+
+            Browse...
+
+        </button>
+
+        <span id="xmlName">
+
+            No XML selected
+
+        </span>
+
+        <input
+            type="file"
+            id="xmlFile"
+            accept=".xml"
+            hidden>
+
+    </div>
+
+    <hr>
+
+    <label>Activity Log</label>
+
+    <pre id="log"></pre>
+
+    <div id="statusBar">
+
+        Ready
+
+    </div>
+
+</div>
+
+<script src="lib/jszip.min.js"></script>
+<script src="js/logger.js"></script>
+<script src="js/forms-library.js"></script>
+<script src="js/zip-reader.js"></script>
+<script src="js/xml-message.js"></script>
+<script src="js/html-renderer.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+
+</html>
