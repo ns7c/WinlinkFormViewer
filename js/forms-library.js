@@ -4,27 +4,25 @@ class FormsLibrary {
 
         this.logger = logger;
 
-        this.version = "";
-        this.viewerCount = 0;
-        this.duplicates = [];
-
-        // Lookup table:
-        // key = lowercase viewer filename
-        // value = array of viewer objects
-        this.index = {};
+        this.reset();
 
     }
 
     reset() {
 
         this.version = "";
+
         this.viewerCount = 0;
+
         this.duplicates = [];
+
         this.index = {};
 
     }
 
     async load(zipReader) {
+
+        this.reset();
 
         this.logger.info(
             "Reading Standard Forms version..."
@@ -46,7 +44,7 @@ class FormsLibrary {
         this.version = version.trim();
 
         this.logger.info(
-            `Version ${this.version}`
+            `Forms Version: ${this.version}`
         );
 
         this.buildIndex(
@@ -56,10 +54,6 @@ class FormsLibrary {
     }
 
     buildIndex(files) {
-
-        this.viewerCount = 0;
-        this.index = {};
-        this.duplicates = [];
 
         for (const path of files) {
 
@@ -91,7 +85,9 @@ class FormsLibrary {
             this.index[key].push({
 
                 filename: filename,
+
                 folder: folder,
+
                 path: path
 
             });
@@ -99,6 +95,22 @@ class FormsLibrary {
             this.viewerCount++;
 
         }
+
+        this.findDuplicates();
+
+        this.logger.info(
+            `${this.viewerCount} viewer forms indexed.`
+        );
+
+        this.logger.info(
+            `${this.duplicates.length} duplicate viewer names.`
+        );
+
+    }
+
+    findDuplicates() {
+
+        this.duplicates = [];
 
         for (const key in this.index) {
 
@@ -109,21 +121,14 @@ class FormsLibrary {
                 this.duplicates.push({
 
                     filename: key,
-                    matches: this.index[key]
+
+                    viewers: this.index[key]
 
                 });
 
             }
 
         }
-
-        this.logger.info(
-            `${this.viewerCount} viewer forms indexed.`
-        );
-
-        this.logger.info(
-            `${this.duplicates.length} duplicate viewer names.`
-        );
 
     }
 
@@ -139,6 +144,43 @@ class FormsLibrary {
             return [];
 
         return this.index[key];
+
+    }
+
+    resolveViewer(displayForm) {
+
+        const viewers =
+            this.findViewer(displayForm);
+
+        if (viewers.length === 0) {
+
+            return {
+
+                status: "not-found"
+
+            };
+
+        }
+
+        if (viewers.length === 1) {
+
+            return {
+
+                status: "unique",
+
+                viewer: viewers[0]
+
+            };
+
+        }
+
+        return {
+
+            status: "duplicate",
+
+            viewers: viewers
+
+        };
 
     }
 

@@ -86,5 +86,40 @@ button {
     padding-top: 10px;
     border-top: 1px solid #ccc;
     color: #444;
+}
+
+.wfv-dialog {
+
+    width: 650px;
+    max-width: 650px;
+    border: 1px solid #808080;
+    border-radius: 6px;
+    padding: 20px;
+
+}
+
+.wfv-dialog::backdrop {
+
+    background: rgba(0,0,0,.35);
+
+}
+
+.dialog-buttons button {
+
+    width: 170px;
+    margin-left: 10px;
+
+}
+
+.dialog-buttons button {
+
+    margin-left: 10px;
+    min-width: 110px;
+
+}
+
+.dialog-body {
+
+    margin-top: 15px;
 
 }
