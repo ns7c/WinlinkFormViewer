@@ -1,3 +1,19 @@
-# Winlink Portable Form Viewer
+## Current Status
 
-Version 0.1.0-alpha1
+✅ Load Standard_Forms.zip
+
+✅ Parse Winlink XML
+
+✅ Resolve viewer
+
+✅ Render HTML form
+
+⬜ Duplicate viewer selection dialog
+
+⬜ Manual viewer selection
+
+⬜ Drag-and-drop support
+
+⬜ Viewer diagnostics
+
+⬜ Release 1.0
