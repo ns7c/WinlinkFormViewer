@@ -2,7 +2,7 @@ class MissingViewerDialog extends DialogBase {
 
     constructor(logger) {
 
-        super("Viewer Not Found");
+        super("Viewer Form Not Found");
 
         this.logger = logger;
 
@@ -16,14 +16,14 @@ class MissingViewerDialog extends DialogBase {
             this.buttons.innerHTML = "";
 
             this.addParagraph(
-                "The requested viewer was not found."
-            );
+    "The requested viewer was not found in the current Forms Library."
+);
 
             const requested =
                 document.createElement("p");
 
             requested.innerHTML =
-                `<b>Requested Viewer:</b><br>${displayForm}`;
+    `<b>Requested Viewer</b><br>${displayForm}`;
 
             this.body.appendChild(requested);
 
@@ -31,7 +31,7 @@ class MissingViewerDialog extends DialogBase {
                 document.createElement("p");
 
             version.innerHTML =
-                `<b>Current Forms Library:</b><br>${formsVersion}`;
+    `<b>Current Forms Library</b><br>${formsVersion}`;
 
             this.body.appendChild(version);
 
@@ -43,8 +43,8 @@ class MissingViewerDialog extends DialogBase {
                 document.createElement("ul");
 
             [
-                "The forms library is out of date.",
-                "The message uses a custom organization form.",
+                "The Forms Library is out of date.",
+                "The message references a custom viewer.",
                 "The viewer has been renamed or removed."
             ].forEach(text => {
 
@@ -60,7 +60,7 @@ class MissingViewerDialog extends DialogBase {
             this.body.appendChild(ul);
 
             this.addButton(
-                "Select Forms ZIP...",
+                "Browse for Viewer or Forms Library...",
                 () => {
 
                     this.close();
@@ -69,18 +69,9 @@ class MissingViewerDialog extends DialogBase {
 
                 });
 
-            this.addButton(
-                "Locate Viewer...",
-                () => {
-
-                    this.close();
-
-                    resolve("viewer");
-
-                });
 
             this.addButton(
-                "Download Latest...",
+                "Download Latest Standard Forms...",
                 () => {
 
                     window.open(

@@ -34,3 +34,10 @@ Substitutes XML variables into HTML viewer templates.
 WinlinkFormViewer
 
 Application controller.
+
+Viewer Resolution
+Resolve the viewer from the current Forms Library.
+If found, render it.
+If not found, prompt the user.
+Allow browsing to either a Forms Library (.zip) or a standalone viewer (.html).
+Keep the current Forms Library active when a standalone viewer is used.
