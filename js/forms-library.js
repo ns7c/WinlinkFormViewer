@@ -1,3 +1,11 @@
+/******************************************************************************
+ *
+ * Winlink Form Viewer
+ *
+ * forms-library.js
+ *
+ ******************************************************************************/
+
 class FormsLibrary {
 
     constructor(logger) {
@@ -10,6 +18,8 @@ class FormsLibrary {
 
     reset() {
 
+        this.libraryName = "";
+
         this.version = "";
 
         this.viewerCount = 0;
@@ -20,12 +30,14 @@ class FormsLibrary {
 
     }
 
-    async load(zipReader) {
+    async load(zipReader, libraryName = "") {
 
         this.reset();
 
+        this.libraryName = libraryName;
+
         this.logger.info(
-            "Reading Standard Forms version..."
+            "Reading Forms Library version..."
         );
 
         const version =
@@ -42,6 +54,10 @@ class FormsLibrary {
         }
 
         this.version = version.trim();
+
+        this.logger.info(
+            `Forms Library: ${this.libraryName}`
+        );
 
         this.logger.info(
             `Forms Version: ${this.version}`

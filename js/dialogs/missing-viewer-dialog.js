@@ -1,3 +1,11 @@
+/******************************************************************************
+ *
+ * Winlink Form Viewer
+ *
+ * Missing Viewer Dialog
+ *
+ ******************************************************************************/
+
 class MissingViewerDialog extends DialogBase {
 
     constructor(logger) {
@@ -8,7 +16,7 @@ class MissingViewerDialog extends DialogBase {
 
     }
 
-    async show(displayForm, formsVersion) {
+    async show(displayForm, libraryName, formsVersion) {
 
         return new Promise((resolve) => {
 
@@ -16,27 +24,27 @@ class MissingViewerDialog extends DialogBase {
             this.buttons.innerHTML = "";
 
             this.addParagraph(
-    "The requested viewer was not found in the current Forms Library."
-);
+                "The requested viewer was not found in the current Forms Library."
+            );
 
             const requested =
                 document.createElement("p");
 
             requested.innerHTML =
-    `<b>Requested Viewer</b><br>${displayForm}`;
+                `<b>Requested Viewer</b><br>${displayForm}`;
 
             this.body.appendChild(requested);
 
-            const version =
+            const library =
                 document.createElement("p");
 
-            version.innerHTML =
-    `<b>Current Forms Library</b><br>${formsVersion}`;
+            library.innerHTML =
+                `<b>Current Forms Library</b><br>${libraryName}<br>Version ${formsVersion}`;
 
-            this.body.appendChild(version);
+            this.body.appendChild(library);
 
             this.addParagraph(
-                "Possible causes:"
+                "Possible reasons:"
             );
 
             const ul =
@@ -65,10 +73,9 @@ class MissingViewerDialog extends DialogBase {
 
                     this.close();
 
-                    resolve("forms");
+                    resolve("browse");
 
                 });
-
 
             this.addButton(
                 "Download Latest Standard Forms...",

@@ -35,3 +35,17 @@ This project follows Semantic Versioning while in development.
 - Viewer rendering performs template substitution only; advanced viewer scripting has not yet been evaluated.
 - Drag-and-drop is not yet implemented.
 - Manual selection is not yet available when a viewer cannot be found.
+
+###v0.5.0
+
+✅ Load Forms Library
+✅ Parse XML
+✅ Render viewer
+✅ Handle duplicate viewers
+✅ Handle missing viewers
+✅ Browse for replacement Forms Library
+✅ Browse for standalone viewer
+✅ Retry rendering automatically
+✅ Download Standard Forms link
+✅ Logging
+✅ Version and viewer statistics

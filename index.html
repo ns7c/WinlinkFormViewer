@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
 
-    <title>Winlink Portable Form Viewer</title>
+    <title>Winlink Form Viewer</title>
 
     <link rel="stylesheet" href="css/viewer.css">
 
@@ -38,6 +38,13 @@
             type="file"
             id="formsFile"
             accept=".zip"
+            hidden>
+
+        <!-- Used by the Missing Viewer dialog -->
+        <input
+            type="file"
+            id="viewerBrowseFile"
+            accept=".zip,.html"
             hidden>
 
     </div>
@@ -113,6 +120,7 @@
 <script src="js/dialogs/dialog-base.js"></script>
 <script src="js/dialogs/viewer-selector-dialog.js"></script>
 <script src="js/dialogs/missing-viewer-dialog.js"></script>
+<script src="js/viewer-loader.js"></script>
 <script src="js/app.js"></script>
 
 </body>

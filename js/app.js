@@ -2,40 +2,71 @@ class WinlinkFormViewer {
 
     constructor() {
 
-        this.logger = new Logger("log");
+    this.logger = new Logger("log");
 
-        this.formsLibrary = new FormsLibrary(this.logger);
+    this.formsLibrary = new FormsLibrary(
+        this.logger
+    );
 
-        this.zipReader = new ZipReader(this.logger);
+    this.zipReader = new ZipReader(
+        this.logger
+    );
 
-        this.xmlMessage = new XmlMessage(this.logger);
+    this.viewerLoader = new ViewerLoader(
+        this.logger,
+        this.zipReader
+    );
 
-        this.renderer = new HtmlRenderer(this.logger);
+    this.xmlMessage = new XmlMessage(
+        this.logger
+    );
 
-        this.viewerSelectorDialog =
-            new ViewerSelectorDialog(this.logger);
+    this.renderer = new HtmlRenderer(
+        this.logger
+    );
 
-        this.missingViewerDialog =
-            new MissingViewerDialog(this.logger);
+    this.viewerSelectorDialog =
+        new ViewerSelectorDialog(
+            this.logger
+        );
 
-        this.ui = {
+    this.missingViewerDialog =
+        new MissingViewerDialog(
+            this.logger
+        );
 
-            btnForms: document.getElementById("btnForms"),
-            btnXML: document.getElementById("btnXML"),
+    this.ui = {
 
-            formsFile: document.getElementById("formsFile"),
-            xmlFile: document.getElementById("xmlFile"),
+        btnForms:
+            document.getElementById("btnForms"),
 
-            formsName: document.getElementById("formsName"),
-            xmlName: document.getElementById("xmlName"),
+        btnXML:
+            document.getElementById("btnXML"),
 
-            formsVersion: document.getElementById("formsVersion"),
-            viewerCount: document.getElementById("viewerCount"),
-            duplicateCount: document.getElementById("duplicateCount")
+        formsFile:
+            document.getElementById("formsFile"),
 
-        };
+        xmlFile:
+            document.getElementById("xmlFile"),
 
-    }
+        formsName:
+            document.getElementById("formsName"),
+
+        xmlName:
+            document.getElementById("xmlName"),
+
+        formsVersion:
+            document.getElementById("formsVersion"),
+
+        viewerCount:
+            document.getElementById("viewerCount"),
+
+        duplicateCount:
+            document.getElementById("duplicateCount")
+
+    };
+
+}
 
     initialize() {
 
@@ -91,47 +122,81 @@ class WinlinkFormViewer {
 
     async loadFormsLibrary(file) {
 
-        try {
+    try {
 
-            this.ui.formsName.textContent =
-                file.name;
+        this.ui.formsName.textContent =
+            file.name;
 
-            this.logger.info(
-                `Loading ${file.name}...`
-            );
+        this.logger.info(
+            `Loading ${file.name}...`
+        );
 
-            await this.zipReader.open(file);
+        await this.zipReader.open(file);
 
-            await this.formsLibrary.load(
-                this.zipReader
-            );
+        await this.formsLibrary.load(
+            this.zipReader,
+            file.name
+        );
 
-            this.ui.formsVersion.textContent =
-                this.formsLibrary.version;
+        this.ui.formsVersion.textContent =
+            this.formsLibrary.version;
 
-            this.ui.viewerCount.textContent =
-                this.formsLibrary.viewerCount;
+        this.ui.viewerCount.textContent =
+            this.formsLibrary.viewerCount;
 
-            this.ui.duplicateCount.textContent =
-                this.formsLibrary.duplicates.length;
+        this.ui.duplicateCount.textContent =
+            this.formsLibrary.duplicates.length;
 
-            this.ui.btnXML.disabled = false;
+        this.ui.btnXML.disabled = false;
 
-            this.logger.info(
-                "Forms library ready."
-            );
-
-        }
-
-        catch (error) {
-
-            this.logger.error(
-                error.message
-            );
-
-        }
+        this.logger.info(
+            "Forms library ready."
+        );
 
     }
+
+    catch (error) {
+
+        this.logger.error(
+            error.message
+        );
+
+    }
+
+}
+
+async browseForViewerOrLibrary() {
+
+    return new Promise((resolve) => {
+
+        const input =
+            document.createElement("input");
+
+        input.type = "file";
+        input.accept = ".zip,.html";
+
+        input.addEventListener(
+            "change",
+            () => {
+
+                if (input.files.length === 0) {
+
+                    resolve(null);
+                    return;
+
+                }
+
+                resolve(input.files[0]);
+
+            },
+            { once: true }
+        );
+
+        input.click();
+
+    });
+
+}
 
     async openXml(file) {
 
@@ -146,42 +211,7 @@ class WinlinkFormViewer {
 
             await this.xmlMessage.load(file);
 
-            const result =
-                this.formsLibrary.resolveViewer(
-                    this.xmlMessage.displayForm
-                );
-
-            switch (result.status) {
-
-                case "not-found":
-
-                    await this.handleMissingViewer();
-
-                    return;
-
-                case "unique":
-
-                    await this.renderViewer(
-                        result.viewer
-                    );
-
-                    return;
-
-                case "duplicate":
-
-                    await this.resolveDuplicateViewers(
-                        result.viewers
-                    );
-
-                    return;
-
-                default:
-
-                    this.logger.error(
-                        `Unknown status: ${result.status}`
-                    );
-
-            }
+            await this.renderCurrentMessage();
 
         }
 
@@ -195,42 +225,115 @@ class WinlinkFormViewer {
 
     }
 
-    async handleMissingViewer() {
+    async renderCurrentMessage() {
 
-        const action =
-            await this.missingViewerDialog.show(
+    const result =
+        this.formsLibrary.resolveViewer(
+            this.xmlMessage.displayForm
+        );
 
-                this.xmlMessage.displayForm,
+    switch (result.status) {
 
-                this.formsLibrary.version
+        case "not-found":
 
+            await this.handleMissingViewer();
+            return;
+
+        case "unique":
+
+            await this.renderViewer(
+                result.viewer
+            );
+            return;
+
+        case "duplicate":
+
+            await this.resolveDuplicateViewers(
+                result.viewers
+            );
+            return;
+
+        default:
+
+            this.logger.error(
+                `Unknown status: ${result.status}`
             );
 
-        switch (action) {
+    }
 
-            case "forms":
+}
 
-                this.ui.formsFile.click();
+    async handleMissingViewer() {
 
-                break;
+    const action =
+        await this.missingViewerDialog.show(
 
-            case "viewer":
+            this.xmlMessage.displayForm,
 
-                this.logger.info(
-                    "Locate Viewer not yet implemented."
-                );
+            this.formsLibrary.libraryName,
 
-                break;
+            this.formsLibrary.version
 
-            default:
+        );
 
-                this.logger.info(
-                    "Viewer selection cancelled."
-                );
+    if (action !== "browse") {
 
-        }
+        this.logger.info(
+            "Viewer selection cancelled."
+        );
+
+        return;
 
     }
+
+    const file =
+        await this.browseForViewerOrLibrary();
+
+    if (!file) {
+
+        this.logger.info(
+            "Browse cancelled."
+        );
+
+        return;
+
+    }
+
+    const extension =
+        file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+    switch (extension) {
+
+        case "zip":
+
+            await this.loadFormsLibrary(
+                file
+            );
+
+            await this.renderCurrentMessage();
+
+            return;
+
+        case "html":
+
+            await this.renderStandaloneViewer(
+                file
+            );
+
+            return;
+
+        default:
+
+            this.logger.error(
+                "Unsupported file type."
+            );
+
+    }
+
+}
 
     async resolveDuplicateViewers(viewers) {
 
@@ -259,38 +362,71 @@ class WinlinkFormViewer {
 
     }
 
+    async renderStandaloneViewer(file) {
+
+    this.logger.info(
+        `Rendering standalone viewer ${file.name}`
+    );
+
+    const templateHtml =
+        await this.viewerLoader.load(
+            file
+        );
+
+    const renderedHtml =
+        this.renderer.render(
+            templateHtml,
+            this.xmlMessage.variables
+        );
+
+    const popup =
+        window.open(
+            "",
+            "_blank"
+        );
+
+    popup.document.open();
+    popup.document.write(renderedHtml);
+    popup.document.close();
+
+    this.logger.info(
+        "Standalone viewer rendered."
+    );
+
+}
+
     async renderViewer(viewer) {
 
-        this.logger.info(
-            `Rendering ${viewer.path}`
+    this.logger.info(
+        `Rendering ${viewer.path}`
+    );
+
+    const templateHtml =
+        await this.viewerLoader.load(
+            viewer
         );
 
-        const templateHtml =
-            await this.zipReader.readHtml(
-                viewer.path
-            );
-
-        const renderedHtml =
-            this.renderer.render(
-                templateHtml,
-                this.xmlMessage.variables
-            );
-
-        const popup =
-            window.open(
-                "",
-                "_blank"
-            );
-
-        popup.document.open();
-        popup.document.write(renderedHtml);
-        popup.document.close();
-
-        this.logger.info(
-            "Viewer opened."
+    const renderedHtml =
+        this.renderer.render(
+            templateHtml,
+            this.xmlMessage.variables
         );
 
-    }
+    const popup =
+        window.open(
+            "",
+            "_blank"
+        );
+
+    popup.document.open();
+    popup.document.write(renderedHtml);
+    popup.document.close();
+
+    this.logger.info(
+        "Viewer opened."
+    );
+
+}
 
 }
 
